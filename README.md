@@ -1,69 +1,105 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Continuous Integration and Continuous Deployment Practical Report
 
-## Available Scripts
+## Introduction
 
-In the project directory, you can run:
+The practical focused on creating, configuring, and managing Docker containers for a web application development environment, implementing multi-stage builds, and using Docker Compose to orchestrate multiple services.
 
-### `npm start`
+## Objectives
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Set up a development environment using Docker
+- Understand and implement Docker containerization for a React application
+- Create multi-stage build processes
+- Configure Docker Compose for managing multiple services
+- Troubleshoot common issues in containerized applications
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+1. Docker Configuration - Basic Containerization
 
-### `npm test`
+A Dockerfile.test was created with the following configuration
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The docker image was built using 
+```docker build -f Dockerfile.test -t <username>/react-app .```
 
-### `npm run build`
+![alt text](dockerps.png)
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Implementing Docker Compose
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+A docker-compose.yml file was created to simplify container management.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![alt text](composeup.png)
 
-### `npm run eject`
+To verify that the app is running. Open your web browser -> http://localhost:3000.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![alt text](localhost.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![alt text](dockertest.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Stop the container 
 
-## Learn More
+![alt text](composestop.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![alt text](composeup2.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![alt text](dockerps2.png)
 
-### Code Splitting
+Move your test dockerfile out of root directory
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+![alt text](test.png)
 
-### Analyzing the Bundle Size
+Then we docker build and get the Image ID.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+![alt text](dockerbuild.png)
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-### Advanced Configuration
+3. Multi-Stage Build Process
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+A production-ready Dockerfile was created with a multi-stage build process:
 
-### Deployment
+The production container was built and run using:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+```docker build .```
 
-### `npm run build` fails to minify
+```docker run -d -p 80:80 <image-id>```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-"# subdevice" 
+![alt text](dockerrun.png)
+
+check whether the container is up
+
+![alt text](dockerps3.png)
+
+Since we used an alternative port mapping to access the application we can go to localhost:3000
+
+![alt text](image.png)
+
+## Challenges and Solutions
+
+#### Node.js Versioning Issues:
+
+- Challenge: The application faced compatibility issues with newer Node.js versions.
+- Solution: Using a specific older version (node:14-alpine) resolved these issues.
+
+
+#### Port Conflicts:
+
+- Challenge: Port 80 was already in use on the host machine.
+- Solution: Using an alternative port mapping (e.g., 3000:80) avoided conflicts.
+
+
+#### Docker Build Errors:
+
+- Challenge: Build errors related to npm packages and dependencies.
+- Solution: Using the --legacy-peer-deps flag with npm install addressed dependency resolution issues.
+
+
+## Conclusion
+
+This practical demonstrated the complete process of containerizing a React application using Docker, from development to production environments. The implementation covered key concepts including:
+
+- Basic Docker containerization
+- Volume mounting for development
+- Docker Compose for service orchestration
+- Multi-stage builds for optimized production containers
+- Testing services in isolation
+
+These skills form the foundation of modern CI/CD practices, enabling more efficient development workflows and consistent deployment environments.
